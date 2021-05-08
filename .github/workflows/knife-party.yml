@@ -1,0 +1,20 @@
+name: knife-party CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the site in the knife-party/builder container
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/knife-party -v ${{ github.workspace }}/_site:/srv/knife-party/_site \
+        knife-party/builder:latest /bin/bash -c "chmod -R 777 /srv/knife-party && knife-party build --future"
